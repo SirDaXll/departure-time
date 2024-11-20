@@ -65,6 +65,11 @@ export default function MillhouseCountdown() {
             </div>
           )}
         </div>
+        <div className="absolute top-[28%] right-[13%] w-[17%] bg-[#8BB38F] p-2 rounded-lg backdrop-blur-sm">
+          <p className="font-mono text-xl md:text-2xl text-center">Tiempo para<br/> el pago</p> {/* Letra más pequeña */}
+        </div>
+
+        
       </div>
     </div>
   )
