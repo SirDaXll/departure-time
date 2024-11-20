@@ -1,7 +1,6 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { CalendarDays } from 'lucide-react'
+import React from 'react'
 
 export default function ContadorDias() {
   const [diasRestantes, setDiasRestantes] = useState(0)
