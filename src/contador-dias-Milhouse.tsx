@@ -49,27 +49,25 @@ export default function MillhouseCountdown() {
           alt="Milhouse countdown"
           className="w-full rounded-lg shadow-xl"
         />
-        <div className="absolute top-[17%] right-[13%] w-[17%] bg-black/80 p-3 rounded-lg backdrop-blur-sm">
+        <div className="absolute top-[17%] right-[13%] w-[17%] bg-black/80 p-1 rounded-lg backdrop-blur-sm">
           {diasRestantes === 0 ? (
-            <div className="text-green-400 font-mono text-2xl md:text-3xl text-center">
+            <div className="text-green-400 font-mono text-[3%] md:text-[4%] lg:text-[150%] text-center">
               ¡HOY ES EL DÍA!
             </div>
           ) : (
             <div className="font-mono text-center space-y-1">
-              <div className="text-white text-2xl md:text-3xl">
+              <div className="text-white text-[3%] md:text-[4%] lg:text-[150%]">
                 {diasRestantes}d {horasRestantes}h
               </div>
-              <div className="text-white text-xl md:text-2xl">
+              <div className="text-white text-[2.5%] md:text-[3%] lg:text-[150%]">
                 {minutosRestantes}m {segundosRestantes}s
               </div>
             </div>
           )}
         </div>
-        <div className="absolute top-[28%] right-[13%] w-[17%] bg-[#8BB38F] p-2 rounded-lg backdrop-blur-sm">
-          <p className="font-mono text-xl md:text-2xl text-center">Tiempo para<br/> el pago</p> {/* Letra más pequeña */}
+        <div className="absolute top-[28%] right-[13%] w-[17%] bg-[#8BB38F] p-1 rounded-lg backdrop-blur-sm">
+          <p className="font-mono text-[2.5%] md:text-[3%] lg:text-[150%] text-center">Tiempo para<br/> el pago</p>
         </div>
-
-        
       </div>
     </div>
   )
