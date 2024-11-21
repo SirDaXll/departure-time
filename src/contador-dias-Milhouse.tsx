@@ -28,7 +28,7 @@ export default function MillhouseCountdown() {
       const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
       const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-      setDiasRestantes(dias);
+      setDiasRestantes(0);
       setHorasRestantes(horas);
       setMinutosRestantes(minutos);
       setSegundosRestantes(segundos);
@@ -51,7 +51,7 @@ export default function MillhouseCountdown() {
         />
         <div className="absolute top-[17%] right-[13%] w-[17%] bg-black/80 p-1 rounded-lg backdrop-blur-sm">
           {diasRestantes === 0 ? (
-            <div className="text-green-400 font-mono text-[3%] md:text-[4%] lg:text-[150%] text-center">
+            <div className="text-green-400 font-mono text-[50%] md:text-[4%] lg:text-[150%] text-center">
               ¡HOY ES EL DÍA!
             </div>
           ) : (
