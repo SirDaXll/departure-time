@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, X, Menu } from 'lucide-react';
 
 interface DateSelectorProps {
-  onDateSelect: (date: Date) => void;
+  onDateSelect: (date: Date, displayText: string, name: string) => void;
   defaultDates?: { name: string, getDate: () => Date }[];
 }
 
@@ -11,6 +11,7 @@ export function DateSelector({
   defaultDates = [
     { 
       name: 'Próximo día 4', 
+      displayText: 'Tiempo para el pago',
       getDate: () => {
         const hoy = new Date();
         let proximoDiaCuatro = hoy.getDate() <= 4 
@@ -25,10 +26,12 @@ export function DateSelector({
     },
     { 
       name: 'Navidad', 
+      displayText: 'Tiempo para Navidad',
       getDate: () => new Date(`${new Date().getFullYear()}-12-25`) 
     },
     { 
       name: 'Año Nuevo', 
+      displayText: 'Tiempo para Año Nuevo',
       getDate: () => new Date(`${new Date().getFullYear() + 1}-01-01`) 
     }
   ]
@@ -39,7 +42,7 @@ export function DateSelector({
 
   const handleCustomDateSubmit = () => {
     if (customDate && customName) {
-      onDateSelect(new Date(customDate));
+      onDateSelect(new Date(customDate), customName, customName);
       setShowMenu(false);
       setCustomDate('');
       setCustomName('');
@@ -66,7 +69,13 @@ export function DateSelector({
             <button 
               key={index}
               onClick={() => {
-                onDateSelect(date.getDate());
+                const hoy = new Date();
+                if (date.name === 'Próximo día 4' && hoy.getDate() === 4) {
+                  date.name = 'el 4 del mes';
+                } else if (date.name === 'Próximo día 4') {
+                  date.name = 'el día 4 del próximo mes';
+                }
+                onDateSelect(date.getDate(), date.displayText, date.name);
                 setShowMenu(false);
               }}
               className="w-full text-left p-2 hover:bg-gray-200 rounded"
@@ -82,6 +91,7 @@ export function DateSelector({
               placeholder="Nombre del evento"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
+              maxLength={20}
               className="w-full p-2 border rounded"
             />
             <input 

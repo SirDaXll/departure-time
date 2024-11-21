@@ -8,35 +8,7 @@ export default function MillhouseCountdown() {
   const [minutosRestantes, setMinutosRestantes] = useState(0);
   const [segundosRestantes, setSegundosRestantes] = useState(0);
   const [targetDate, setTargetDate] = useState<Date | null>(null);
-  // const [showMenu, setShowMenu] = useState(false);
-  // const [customDate, setCustomDate] = useState('');
-  // const [customName, setCustomName] = useState('');
-
-  // Fechas predefinidas
-  // const predefinedDates = [
-  //   { 
-  //     name: 'Próximo día 4', 
-  //     getDate: () => {
-  //       const hoy = new Date();
-  //       let proximoDiaCuatro = hoy.getDate() <= 4 
-  //         ? new Date(hoy.getFullYear(), hoy.getMonth(), 4)
-  //         : new Date(hoy.getFullYear(), hoy.getMonth() + 1, 4);
-        
-  //       if (proximoDiaCuatro <= hoy) {
-  //         proximoDiaCuatro.setMonth(proximoDiaCuatro.getMonth() + 1);
-  //       }
-  //       return proximoDiaCuatro;
-  //     }
-  //   },
-  //   { 
-  //     name: 'Navidad', 
-  //     getDate: () => new Date(`${new Date().getFullYear()}-12-25`) 
-  //   },
-  //   { 
-  //     name: 'Año Nuevo', 
-  //     getDate: () => new Date(`${new Date().getFullYear() + 1}-01-01`) 
-  //   }
-  // ];
+  const [eventName, setEventName] = useState('Tiempo para el pago');
 
   useEffect(() => {
     const calcularTiempoRestante = () => {
@@ -53,7 +25,7 @@ export default function MillhouseCountdown() {
           : new Date(hoy.getFullYear(), hoy.getMonth() + 1, 4);
         
       }
-      if (fechaObjetivo < hoy) {
+      if (fechaObjetivo <  new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1)) {
         fechaObjetivo.setFullYear(hoy.getFullYear() + 1);
     }
 
@@ -78,7 +50,10 @@ export default function MillhouseCountdown() {
   return (
     <div className="relative min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden">
       <DateSelector 
-        onDateSelect={(date) => setTargetDate(date)}
+        onDateSelect={(date, name) => {
+          setTargetDate(date);
+          setEventName(name);
+        }}
       />
       <div className="relative w-full max-w-4xl lg:max-w-6xl">
         <img
@@ -87,7 +62,7 @@ export default function MillhouseCountdown() {
           className="w-full rounded-lg shadow-xl"
         />
         <div className="absolute top-[17%] right-[13%] w-[17%] bg-black/80 p-1 rounded-lg backdrop-blur-sm">
-          {diasRestantes === 0 ? (
+          {diasRestantes === -1 ? (
             <div className="text-green-400 font-mono text-[50%] md:text-[4%] lg:text-[150%] text-center">
               ¡HOY ES EL DÍA!
             </div>
@@ -102,9 +77,10 @@ export default function MillhouseCountdown() {
             </div>
           )}
         </div>
-        <div className="absolute top-[28%] right-[13%] w-[17%] bg-[#8BB38F] p-1 rounded-lg backdrop-blur-sm">
-          <p className="font-mono text-[2.5%] md:text-[3%] lg:text-[150%] text-center">
-            Tiempo para el pago
+        <div className="absolute top-[28%] right-[13%] w-[17%] bg-[#8BB38F] p-1 rounded-lg backdrop-blur-sm min-h-[8%] max-h-[8%]">
+          <p className="font-mono text-[2.5%] md:text-[3%] lg:text-[150%] text-center 
+            break-words whitespace-normal overflow-hidden">
+            {eventName}
           </p>
         </div>
       </div>

@@ -9,6 +9,16 @@ export default function ContadorDias() {
   const [minutosRestantes, setMinutosRestantes] = useState(0);
   const [segundosRestantes, setSegundosRestantes] = useState(0);
   const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [eventName, setEventName] = useState('día 4 del próximo mes');
+  const hoy = new Date();
+  
+  useEffect(() => {
+    if (hoy.getDate() === 4) {
+      setEventName('el 4 del mes');
+    } else {
+      setEventName('el día 4 del próximo mes');
+    }
+  }, []);
 
   useEffect(() => {
     const calcularTiempoRestante = () => {
@@ -52,7 +62,10 @@ export default function ContadorDias() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
       <DateSelector 
-        onDateSelect={(date) => setTargetDate(date)}
+        onDateSelect={(date,displayText, name) => {
+          setTargetDate(date);
+          setEventName(name);
+        }}
       />
       <div className="bg-white p-8 rounded-lg shadow-xl text-center">
         <h1 className="text-3xl font-bold text-blue-600 mb-4">Contador de Días</h1>
@@ -75,7 +88,7 @@ export default function ContadorDias() {
           </p>
         </div>
         <p className="text-gray-600">
-          {diasRestantes === -1 ? "Es 4 del mes" : "para el día 4 del próximo mes"}
+          {diasRestantes === -1 ? `Hoy es ${eventName}` : `para ${eventName}`}
         </p>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import ContadorDias from './contador-dias-corregido';
+import ContadorDias from './contador-dias';
 import MillhouseCountdown from './contador-dias-Milhouse';
 
 import './index.css';
