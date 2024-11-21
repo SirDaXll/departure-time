@@ -39,13 +39,35 @@ export function DateSelector({
   const [showMenu, setShowMenu] = useState(false);
   const [customDate, setCustomDate] = useState('');
   const [customName, setCustomName] = useState('');
+  const [error, setError] = useState('');
 
   const handleCustomDateSubmit = () => {
-    if (customDate && customName) {
-      onDateSelect(new Date(customDate), customName, customName);
-      setShowMenu(false);
-      setCustomDate('');
-      setCustomName('');
+    if (!customDate || !customName) {
+      setError('Por favor, completa ambos campos');
+      return;
+    }
+
+    if (customDate < today) {
+      setError('La fecha no puede ser anterior a hoy');
+      // setCustomDate('');
+      return;
+    }
+
+    onDateSelect(new Date(customDate), customName, customName);
+    setShowMenu(false);
+    setCustomDate('');
+    setCustomName('');
+    setError('');
+  };
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const handleDateBlur = () => {
+    if (customDate && customDate < today) {
+      setError('La fecha no puede ser anterior a hoy');
+      // setCustomDate('');
+    } else {
+      setError('');
     }
   };
 
@@ -94,10 +116,16 @@ export function DateSelector({
               maxLength={20}
               className="w-full p-2 border rounded"
             />
+            {error && (
+              <p className="text-sm text-red-500 mt-1">{error}</p> // Mensaje pequeño
+            )}
+
             <input 
               type="date"
               value={customDate}
               onChange={(e) => setCustomDate(e.target.value)}
+              min={today}
+              onBlur={handleDateBlur}
               className="w-full p-2 border rounded"
             />
             <button 
