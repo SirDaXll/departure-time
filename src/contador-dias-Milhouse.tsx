@@ -28,7 +28,7 @@ export default function MillhouseCountdown() {
       const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
       const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-      setDiasRestantes(0);
+      setDiasRestantes(dias);
       setHorasRestantes(horas);
       setMinutosRestantes(minutos);
       setSegundosRestantes(segundos);
