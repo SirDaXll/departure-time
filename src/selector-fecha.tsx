@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, X, Menu } from 'lucide-react';
 
 interface DateSelectorProps {
   onDateSelect: (date: Date, displayText: string, name: string) => void;
-  defaultDates?: { name: string, getDate: () => Date }[];
+  defaultDates?: { name: string, displayText: string, getDate: () => Date }[];
 }
 
 export function DateSelector({ 
@@ -21,25 +21,49 @@ export function DateSelector({
         if (proximoDiaCuatro <= hoy) {
           proximoDiaCuatro.setMonth(proximoDiaCuatro.getMonth() + 1);
         }
+        localStorage.setItem('customDate', proximoDiaCuatro.toISOString());
+        localStorage.setItem('customName', 'el día 4 del próximo mes');
+        localStorage.setItem('displayText', 'Tiempo para el pago');
         return proximoDiaCuatro;
       }
     },
     { 
       name: 'Navidad', 
       displayText: 'Tiempo para Navidad',
-      getDate: () => new Date(`${new Date().getFullYear()}-12-25`) 
+      getDate: () => {
+        localStorage.setItem('customDate', new Date(new Date().getFullYear(), 11, 25).toISOString());
+        localStorage.setItem('customName', 'Navidad');
+        localStorage.setItem('displayText', 'Tiempo para Navidad');
+        const hoy = new Date();
+        return new Date(hoy.getFullYear(), 11, 25);
+      }
     },
     { 
       name: 'Año Nuevo', 
       displayText: 'Tiempo para Año Nuevo',
-      getDate: () => new Date(`${new Date().getFullYear() + 1}-01-01`) 
+      getDate: () => {
+        const hoy = new Date();
+        localStorage.setItem('customDate', new Date(hoy.getFullYear() + 1, 0, 1).toISOString());
+        localStorage.setItem('customName', 'Año Nuevo');
+        localStorage.setItem('displayText', 'Tiempo para Año Nuevo');
+        return new Date(hoy.getFullYear() + 1, 0, 1);
+      }
     }
   ]
-}) {
+} : DateSelectorProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [customDate, setCustomDate] = useState('');
   const [customName, setCustomName] = useState('');
   const [error, setError] = useState('');
+  const [dates, setDates] = useState(defaultDates);
+  
+  // useEffect(() => {
+  //   const storedDates = localStorage.getItem('customDates');
+  //   if (storedDates) {
+  //     setDates(JSON.parse(storedDates));
+  //   }
+  // }, []);
+
 
   const handleCustomDateSubmit = () => {
     if (!customDate || !customName) {
@@ -53,7 +77,23 @@ export function DateSelector({
       return;
     }
 
-    onDateSelect(new Date(customDate), customName, customName);
+
+    const [year, month, day] = customDate.split('-').map(Number);
+    const parsedDate = new Date(year, month - 1, day);
+
+    const newDate = {
+      name: customName,
+      displayText: customName,
+      getDate: () => parsedDate
+    };
+    const updatedDates = [...dates, newDate];
+    setDates(updatedDates);
+
+    // localStorage.setItem('customDates', JSON.stringify(updatedDates));
+    localStorage.setItem('customDate', parsedDate.toISOString());
+    localStorage.setItem('customName', customName);
+    localStorage.setItem('displayText', customName);
+    onDateSelect(parsedDate, customName, customName);
     setShowMenu(false);
     setCustomDate('');
     setCustomName('');
@@ -87,7 +127,7 @@ export function DateSelector({
           <h3 className="text-xl font-bold mb-4">Seleccionar Fecha</h3>
           
           {/* Fechas predefinidas */}
-          {defaultDates.map((date, index) => (
+          {dates.map((date, index) => (
             <button 
               key={index}
               onClick={() => {

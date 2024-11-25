@@ -13,10 +13,21 @@ export default function ContadorDias() {
   const hoy = new Date();
   
   useEffect(() => {
+    const storedDate = localStorage.getItem('customDate');
+    const storedName = localStorage.getItem('customName');
+    
     if (hoy.getDate() === 4) {
       setEventName('el 4 del mes');
     } else {
       setEventName('el día 4 del próximo mes');
+    }
+
+    if (storedDate) {
+      console.log('Stored date:', storedName);
+      setTargetDate(new Date(storedDate));
+      if (storedName) {
+        setEventName(storedName);
+      }
     }
   }, []);
 
@@ -24,7 +35,7 @@ export default function ContadorDias() {
     const calcularTiempoRestante = () => {
       const hoy = new Date()
       let fechaObjetivo: Date;
-  
+
       if (targetDate) {
         fechaObjetivo = targetDate;
       } else {

@@ -11,6 +11,21 @@ export default function MillhouseCountdown() {
   const [eventName, setEventName] = useState('Tiempo para el pago');
 
   useEffect(() => {
+    const storedDate = localStorage.getItem('customDate');
+    const storedName = localStorage.getItem('displayText');
+    
+    if (storedDate) {
+      console.log('Stored date:', storedName);
+      setTargetDate(new Date(storedDate));
+      if (storedName) {
+        setEventName(storedName);
+      }
+    }
+  }, []);
+
+
+
+  useEffect(() => {
     const calcularTiempoRestante = () => {
       const hoy = new Date();
       let fechaObjetivo: Date;
