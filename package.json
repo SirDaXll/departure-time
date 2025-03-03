@@ -1,6 +1,6 @@
 {
-  "name": "payday",
-  "version": "1.0.0",
+  "name": "departure-time",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "start": "vite",
@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nicolas Aleuanlli; Diego Molina",
   "license": "ISC",
   "description": "",
   "dependencies": {

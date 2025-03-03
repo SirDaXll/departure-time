@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import ContadorDias from './contador-dias';
-import MillhouseCountdown from './contador-dias-Milhouse';
+import Contador from './contador';
+import MillhouseCountdown from './contador-Milhouse';
 
 import './index.css';
 
@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <div className="relative">
-      {showContador ? <ContadorDias /> : <MillhouseCountdown />}
+      {showContador ? <Contador /> : <MillhouseCountdown />}
 
       <div className="group absolute top-4 right-6">
         <button
@@ -38,7 +38,7 @@ const App = () => {
             />
           </svg>
         </button>
-        <span className="absolute top-12 left-1/2 transform -translate-x-1/2 text-white bg-purple-600 text-sm rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <span className="absolute top-12 left-1/2 transform -translate-x-1/2 text-white bg-purple-600 text-sm rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 justify-center items-center">
             Cambiar contador
           </span>
       </div>
