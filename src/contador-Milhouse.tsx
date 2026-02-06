@@ -1,73 +1,82 @@
-import { useState, useEffect } from 'react'
-import React from 'react'
+import React, { useMemo, useEffect } from 'react'
+import { useCountdown } from './hooks/useCountdown'
+import { useNotifications } from './hooks/useNotifications'
+import { useCelebrationSound } from './hooks/useSound'
+import { formatTime } from './utils/timeFormat'
+import { SavedEvent, EventType } from './types/events'
 
-export default function MillhouseCountdown() {
-  const [diasRestantes, setDiasRestantes] = useState(0);
-  const [horasRestantes, setHorasRestantes] = useState(0);
-  const [minutosRestantes, setMinutosRestantes] = useState(0);
-  const [segundosRestantes, setSegundosRestantes] = useState(0);
+interface MillhouseCountdownProps {
+  event: SavedEvent;
+}
 
+const MillhouseCountdown = React.memo(({ event }: MillhouseCountdownProps) => {
+  const { days, hours, minutes, seconds } = useCountdown({ event });
+  
+  const isTimeUp = days === 0 && hours === 0 && minutes === 0 && seconds === 0;
+  
+  // Hooks para notificaciones y sonido
+  useNotifications(event, { days, hours, minutes, seconds });
+  useCelebrationSound(isTimeUp);
+
+  // Precargar la imagen de celebración
   useEffect(() => {
-    const calcularTiempoRestante = () => {
-      const hoy = new Date();
-      let fechaObjetivo = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 16, 0, 0); // 4pm today
+    const img = new Image();
+    img.src = "https://kggwetnm0aecy2yh.public.blob.vercel-storage.com/milhouse-out-3go5aO4Mlrcb2fGcXTSYRylGk0Dwax.webp";
+  }, []);
 
-      if (hoy.getHours() >= 16) {
-        // If it's already past 4pm, set the target to 4pm tomorrow
-        fechaObjetivo.setDate(fechaObjetivo.getDate() + 1);
-      }
-
-      const diferencia = fechaObjetivo.getTime() - hoy.getTime();
-      const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-      const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-      const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-
-      setDiasRestantes(dias);
-      setHorasRestantes(horas);
-      setMinutosRestantes(minutos);
-      setSegundosRestantes(segundos);
+  const description = useMemo(() => {
+    if (event.type === EventType.DATE) {
+      return `Falta para ${event.name}`;
+    } else if (event.type === EventType.TIME) {
+      return `Tiempo para ${event.name}`;
+    } else {
+      return `Falta para el día ${event.targetDay}`;
     }
+  }, [event]);
 
-    calcularTiempoRestante();
-    const intervalo = setInterval(calcularTiempoRestante, 1000);
-
-    return () => clearInterval(intervalo);
-  },);
-
-  const formatTime = (time: number) => {
-    return String(time).padStart(2, '0');
-  };
+  const showDays = useMemo(
+    () => event.type === EventType.DATE || event.type === EventType.DAY_OF_MONTH,
+    [event.type]
+  );
 
   return (
     <div className="relative min-h-screen bg-black flex items-center justify-center overflow-hidden">
       <div className="relative w-full max-w-4xl lg:max-w-6xl">
         <img
-          src="https://kggwetnm0aecy2yh.public.blob.vercel-storage.com/milhouse-6hPKMn1xggNt04ba5UHaBGdtXj8nkM.webp"
-          alt="Milhouse countdown"
+          key={isTimeUp ? 'out' : 'normal'}
+          src={isTimeUp 
+            ? "https://kggwetnm0aecy2yh.public.blob.vercel-storage.com/milhouse-out-3go5aO4Mlrcb2fGcXTSYRylGk0Dwax.webp"
+            : "https://kggwetnm0aecy2yh.public.blob.vercel-storage.com/milhouse-6hPKMn1xggNt04ba5UHaBGdtXj8nkM.webp"
+          }
+          alt={isTimeUp ? "Milhouse celebration" : "Milhouse countdown"}
           className="w-full shadow-xl"
         />
-        <div className="absolute top-[18.8%] right-[14.5%] w-[14%]">
-          {diasRestantes === -1 ? (
-            <div className="text-green-400 font-mono text-[50%] md:text-[4%] lg:text-[150%] text-center">
-              ¡ES HORA DE IRSE!
-            </div>
-          ) : (
-            <div className="font-mono text-center">
-              <div className="text-[#5e8f2a] text-[2.5%] md:text-[3%] lg:text-[300%]">
-                <span style={{ fontFamily: 'Digital-7, sans-serif' }}>
-                  {formatTime(horasRestantes)}:{formatTime(minutosRestantes)}:{formatTime(segundosRestantes)}
-                </span>
+        {!isTimeUp && (
+          <>
+            <div className="absolute top-[18.8%] right-[14.5%] w-[14%]">
+              <div className="font-mono text-center">
+                <div className="text-[#5e8f2a] text-[2.5%] md:text-[3%] lg:text-[300%]">
+                  <span style={{ fontFamily: 'Digital-7, sans-serif' }}>
+                    {showDays
+                      ? `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}`
+                      : `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`
+                    }
+                  </span>
+                </div>
               </div>
             </div>
-          )}
-        </div>
-        <div className="absolute top-[27%] right-[13%] w-[17%]">
-          <p className="font-mono text-[2.5%] md:text-[3%] lg:text-[200%] text-center break-words whitespace-normal overflow-hidden" style={{ fontWeight: 'bold' }}>
-            Tiempo para la salida
-          </p>
-        </div>
+            <div className="absolute top-[27%] right-[13%] w-[17%]">
+              <p className="font-mono text-[2.5%] md:text-[3%] lg:text-[200%] text-center break-words whitespace-normal overflow-hidden" style={{ fontWeight: 'bold' }}>
+                {description}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
-}
+});
+
+MillhouseCountdown.displayName = 'MillhouseCountdown';
+
+export default MillhouseCountdown;
