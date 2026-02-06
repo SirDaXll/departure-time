@@ -143,7 +143,7 @@ Las contribuciones son bienvenidas:
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la licencia ISC. Ver el archivo `LICENSE` para más detalles.
 
 ## ✍️ Autores
 
